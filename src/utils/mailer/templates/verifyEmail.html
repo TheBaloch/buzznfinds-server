@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header img {
+            max-width: 100px; /* Adjusted to make the logo smaller */
+        }
+        .content {
+            text-align: center;
+            padding: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 20px 0;
+            background-color: #FFA500; /* Light orange */
+            color: #ffffff; /* White text */
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            color: #888888;
+            font-size: 12px;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://imguru.ae/assets/img/logo/logo.png" alt="Imguru Logo">
+        </div>
+        <div class="content">
+            <h1>Email Verification</h1>
+            <p>Thank you for signing up with Imguru! Please click the button below to verify your email address.</p>
+            <a href="{{verificationLink}}" class="button">Verify Email</a>
+            <p>If the button above doesn't work, please click the link below:</p>
+            <p><a href="{{verificationLink}}">{{verificationLink}}</a></p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Imguru. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

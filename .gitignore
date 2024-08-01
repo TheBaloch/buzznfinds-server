@@ -1,0 +1,13 @@
+node_modules
+server.zip
+
+dist/*
+
+yarn.lock
+.lock
+
+.env
+
+sitemap.txt
+
+public
