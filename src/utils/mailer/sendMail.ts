@@ -1,6 +1,9 @@
 import transporter from "./transpoter";
 import path from "path";
 import fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function sendSucessEmailNotification(title: string, url: string) {
   try {
