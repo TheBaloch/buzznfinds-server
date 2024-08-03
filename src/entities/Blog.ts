@@ -31,6 +31,9 @@ export class Blog {
   @Column({ type: "json", nullable: true })
   mainImage!: any;
 
+  @Column({ type: "json", nullable: true })
+  author!: any;
+
   @Column({ type: "varchar", default: "draft" })
   status!: "draft" | "published";
 

@@ -16,6 +16,7 @@ dotenv.config(); //env file read
 import userRoutes from "./routes/userRoutes";
 import blogRoutes from "./routes/blogRoutes";
 import siteSettingRoutes from "./routes/siteSettingsRoutes";
+import uploadRoutes from "./routes/uploadRoute";
 
 const app = express();
 
@@ -49,6 +50,7 @@ async function startServer() {
   app.use("/framework", userRoutes);
   app.use("/framework", blogRoutes);
   app.use("/framework", siteSettingRoutes);
+  app.use("/framework", uploadRoutes);
   app.use("/framework/public", express.static(staticFilesPath));
 
   //Cache

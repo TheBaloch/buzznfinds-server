@@ -6,7 +6,6 @@ import { User } from "../entities/User";
 import {
   sendVerifyEmail,
   sendResetEmail,
-  sendFailEmail,
   sendPaymentFailEmail,
 } from "../utils/mailer/sendMail";
 import { v4 as uuidv4 } from "uuid";

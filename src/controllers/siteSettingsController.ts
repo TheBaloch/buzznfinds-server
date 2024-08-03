@@ -54,9 +54,11 @@ export const updateBlog = async (req: Request, res: Response) => {
 
   if (settings.length === 0) {
     const newSettings = new SiteSettings();
+    //updates
     globalSetting = await settingsRepo.save(newSettings);
-    //updates here
     return res.status(200).json(globalSetting);
+  } else {
+    const existingSettings = settings[0];
   }
 
   try {

@@ -4,7 +4,10 @@ import { Blog } from "../entities/Blog";
 import { Category } from "../entities/Category";
 import { Content } from "../entities/Content";
 import { generateBlogPost } from "../utils/blog/blogGenerator";
-import { sendEmail, sendFailEmail } from "../utils/mailer/sendMail";
+import {
+  sendSucessEmailNotification,
+  sendFailEmailNotification,
+} from "../utils/mailer/sendMail";
 import { addToSitemap } from "../utils/sitemap";
 
 export const generateBlog = async (req: Request, res: Response) => {
@@ -216,7 +219,6 @@ async function generateAndSaveBlog(
       content.conclusion = generatedBlogData.conclusion;
       content.cta = generatedBlogData.callToAction;
       content.SEO = generatedBlogData.SEO;
-      content.Author = generatedBlogData.author;
       content.cta_type = cta_type || "";
       content.cta_link = cta_link || "";
       content = await contentRepository.save(content);
@@ -228,20 +230,20 @@ async function generateAndSaveBlog(
       blog.subtitle = generatedBlogData.subtitle;
       blog.slug = generatedBlogData.slug;
       blog.mainImagePrompt = generatedBlogData.image;
+      blog.author = generatedBlogData.author;
       blog.mainImage = mainImage;
       blog.status = "published";
 
       const finalBlog = await blogRepository.save(blog);
       addToSitemap(`${process.env.BLOG_URL}/${finalBlog.slug}`);
-      await sendEmail(
-        "hi@nattynyc.com",
+      await sendSucessEmailNotification(
         finalBlog.title,
         `${process.env.BLOG_URL}/${finalBlog.slug}`
       );
     } else {
-      await sendFailEmail("hi@nattynyc.com", title);
+      await sendFailEmailNotification(title);
     }
   } catch {
-    await sendFailEmail("hi@nattynyc.com", title);
+    await sendFailEmailNotification(title);
   }
 }

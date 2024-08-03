@@ -15,9 +15,6 @@ export class Content {
   @Column({ type: "json" })
   SEO!: any;
 
-  @Column({ type: "json", nullable: true })
-  Author!: any;
-
   @Column({ type: "text", nullable: true })
   cta!: string;
 

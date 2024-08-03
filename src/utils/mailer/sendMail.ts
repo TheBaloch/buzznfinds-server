@@ -2,11 +2,11 @@ import transporter from "./transpoter";
 import path from "path";
 import fs from "fs";
 
-export async function sendEmail(to: string, title: string, url: string) {
+export async function sendSucessEmailNotification(title: string, url: string) {
   try {
     const mailOptions = {
       from: `"${process.env.MAIL_FROM}" <${process.env.MAIL_EMAIL}>`,
-      to: to,
+      to: process.env.MAIL_TO,
       subject: "Blog Generated",
       text: `Your blog with the title "${title}" has been generated successfully. You can view it at: ${url}`,
     };
@@ -24,11 +24,11 @@ export async function sendEmail(to: string, title: string, url: string) {
   }
 }
 
-export async function sendFailEmail(to: string, title: string) {
+export async function sendFailEmailNotification(title: string) {
   try {
     const mailOptions = {
       from: `"${process.env.MAIL_FROM}" <${process.env.MAIL_EMAIL}>`,
-      to: to,
+      to: process.env.MAIL_TO,
       subject: "Blog Failed",
       text: `Your blog with the title "${title}" Failed`,
     };
