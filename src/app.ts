@@ -43,13 +43,13 @@ const staticFilesPath = path.resolve(
 
 async function startServer() {
   //Routes
-  app.use("/api/sitemap.txt", (req, res) => {
+  app.use("/framework/sitemap.txt", (req, res) => {
     res.sendFile(path.join(__dirname, "sitemap.txt"));
   });
-  app.use("/api", userRoutes);
-  app.use("/api", blogRoutes);
-  app.use("/api", siteSettingRoutes);
-  app.use("/api/public", express.static(staticFilesPath));
+  app.use("/framework", userRoutes);
+  app.use("/framework", blogRoutes);
+  app.use("/framework", siteSettingRoutes);
+  app.use("/framework/public", express.static(staticFilesPath));
 
   //Cache
   if (process.env.REDIS_ENABLED === "true") client.connect();
