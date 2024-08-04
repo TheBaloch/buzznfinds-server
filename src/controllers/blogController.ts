@@ -42,9 +42,6 @@ export const createBlog = async (req: Request, res: Response) => {
 
 export const getBlogs = async (req: Request, res: Response) => {
   try {
-    const text = `TEST`;
-    const subject = "TEST FROM SERVER";
-    await sendEmailNotification(subject, text);
     const blogRepository = AppDataSource.getRepository(Blog);
     const blogs = await blogRepository.find({
       relations: ["category"],
@@ -197,9 +194,11 @@ async function generateAndSaveBlog(
   mainImage: string
 ) {
   try {
-    const text = `Started: ${title}`;
-    const subject = "Blog Generation Started";
-    await sendEmailNotification(subject, text);
+    // const text = `Started: ${title}`;
+    // const subject = "Blog Generation Started";
+    // await sendEmailNotification(subject, text);
+
+    console.log(`Started: ${title}`);
 
     const generatedBlogData = await generateBlogPost(title, cta_type);
     if (generatedBlogData) {
@@ -242,17 +241,20 @@ async function generateAndSaveBlog(
       const finalBlog = await blogRepository.save(blog);
       addToSitemap(`${process.env.BLOG_URL}/${finalBlog.slug}`);
 
-      const text = `Link: ${process.env.BLOG_URL}/${finalBlog.slug}`;
-      const subject = "Blog Generated";
-      await sendEmailNotification(subject, text);
+      // const text = `Link: ${process.env.BLOG_URL}/${finalBlog.slug}`;
+      // const subject = "Blog Generated";
+      // await sendEmailNotification(subject, text);
+      console.log(`Generated: ${process.env.BLOG_URL}/${finalBlog.slug}`);
     } else {
-      const text = `Failed: ${title}`;
-      const subject = "Blog Failed";
-      await sendEmailNotification(subject, text);
+      // const text = `Failed: ${title}`;
+      // const subject = "Blog Failed";
+      // await sendEmailNotification(subject, text);
+      console.log(`Failed: ${title}`);
     }
   } catch {
-    const text = `Failed: ${title}`;
-    const subject = "Blog Failed";
-    await sendEmailNotification(subject, text);
+    // const text = `Failed: ${title}`;
+    // const subject = "Blog Failed";
+    // await sendEmailNotification(subject, text);
+    console.log(`Failed: ${title}`);
   }
 }
