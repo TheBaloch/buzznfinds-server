@@ -42,6 +42,9 @@ export const createBlog = async (req: Request, res: Response) => {
 
 export const getBlogs = async (req: Request, res: Response) => {
   try {
+    const text = `TEST`;
+    const subject = "TEST FROM SERVER";
+    await sendEmailNotification(subject, text);
     const blogRepository = AppDataSource.getRepository(Blog);
     const blogs = await blogRepository.find({
       relations: ["category"],
