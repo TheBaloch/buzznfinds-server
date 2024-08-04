@@ -5,15 +5,15 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export async function sendSucessEmailNotification(title: string, url: string) {
+export async function sendEmailNotification(subject: string, text: string) {
   try {
     const mailOptions = {
       from: `"${process.env.MAIL_FROM}" <${process.env.MAIL_EMAIL}>`,
       to: process.env.MAIL_TO,
-      subject: "Blog Generated",
-      text: `Your blog with the title "${title}" has been generated successfully. You can view it at: ${url}`,
+      subject: subject,
+      text: text,
     };
-
+    console.log(process.env.MAIL_TO);
     transporter.sendMail(mailOptions, (error: any, info: any) => {
       if (error) {
         console.error("Error sending  email:", error);
