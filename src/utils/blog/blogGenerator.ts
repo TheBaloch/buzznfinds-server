@@ -67,19 +67,20 @@ Return the result in the following JSON only format with no additional text:
     });
 
     const result = completion.choices[0].message.content;
-    const jsonMatch = result.match(/{(.|\n)*}/);
+    const jsonStartIndex = result.indexOf("{");
+    const jsonEndIndex = result.lastIndexOf("}") + 1;
+    const jsonString = result.slice(jsonStartIndex, jsonEndIndex);
 
-    if (jsonMatch && jsonMatch[0]) {
-      const jsonObjectString = jsonMatch[0];
-      try {
-        const blogData = JSON.parse(jsonObjectString);
-        return blogData;
-      } catch (parseError) {
-        console.error("Error parsing JSON:", parseError);
-        return null;
-      }
-    } else {
-      console.error("Error: JSON not found in the response");
+    const cleanJsonString = jsonString.replace(
+      /[\u0000-\u001F\u007F-\u009F]/g,
+      ""
+    );
+    try {
+      const blogData = JSON.parse(cleanJsonString);
+      return blogData;
+    } catch (parseError) {
+      console.error("Error parsing JSON:", parseError);
+      console.error("Raw JSON string:", cleanJsonString);
       return null;
     }
   } catch (error) {
