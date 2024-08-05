@@ -15,6 +15,7 @@ dotenv.config(); //env file read
 //Routes Import
 import userRoutes from "./routes/userRoutes";
 import blogRoutes from "./routes/blogRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
 import siteSettingRoutes from "./routes/siteSettingsRoutes";
 import uploadRoutes from "./routes/uploadRoute";
 
@@ -49,6 +50,7 @@ async function startServer() {
   });
   app.use("/framework", userRoutes);
   app.use("/framework", blogRoutes);
+  app.use("/framework", categoryRoutes);
   app.use("/framework", siteSettingRoutes);
   app.use("/framework", uploadRoutes);
   app.use("/framework/public", express.static(staticFilesPath));
