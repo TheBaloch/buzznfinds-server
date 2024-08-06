@@ -54,6 +54,35 @@ export const getBlogs = async (req: Request, res: Response) => {
   }
 };
 
+export const getLatestBlogs = async (req: Request, res: Response) => {
+  const { page = 1, limit = 10 } = req.query; // default values for pagination
+
+  try {
+    const blogRepository = AppDataSource.getRepository(Blog);
+    const [blogs, total] = await blogRepository.findAndCount({
+      relations: ["category"],
+      order: { createdAt: "DESC" },
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+    });
+
+    const totalPages = Math.ceil(total / Number(limit));
+
+    return res.status(200).json({
+      data: blogs,
+      meta: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 export const getBlogBySlug = async (req: Request, res: Response) => {
   const { slug } = req.params;
 
