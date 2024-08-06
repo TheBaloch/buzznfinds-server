@@ -70,7 +70,7 @@ export const getLatestBlogs = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       data: blogs,
-      meta: {
+      pagination: {
         total,
         page: Number(page),
         limit: Number(limit),
