@@ -6,6 +6,8 @@ import {
   OneToOne,
   OneToMany,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Category } from "./Category";
 import { Content } from "./Content";
@@ -40,10 +42,19 @@ export class Blog {
   @ManyToOne(() => Category, (category) => category.blogs)
   category!: Category;
 
-  @OneToOne(() => Content)
+  @OneToOne(() => Content, { cascade: true, onDelete: "CASCADE" })
   @JoinColumn()
   content!: Content;
 
-  @OneToMany(() => Comment, (comment) => comment.blog)
+  @OneToMany(() => Comment, (comment) => comment.blog, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   comments!: Comment[];
+
+  @CreateDateColumn({ type: "timestamp" })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ type: "timestamp" })
+  updatedAt!: Date;
 }
