@@ -24,9 +24,8 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
     const categoryQuery = categoryRepository
       .createQueryBuilder("category")
       .leftJoinAndSelect("category.blogs", "blog")
-      .where("category.slug = :slug", { slug })
-      .orderBy("category.createdAt", "DESC");
-
+      .orderBy("blog.createdAt", "DESC")
+      .where("category.slug = :slug", { slug });
     if (limit) {
       categoryQuery.limit(Number(limit));
     }
