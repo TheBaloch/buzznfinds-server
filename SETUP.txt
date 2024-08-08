@@ -1,3 +1,6 @@
+temp dont need for now in package.json
+// "build": "tsc && cp -r src/utils/mailer/templates/* dist/utils/mailer/templates/",
+
 install postgres
 
 set listen port to localhost
