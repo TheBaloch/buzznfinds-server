@@ -16,6 +16,7 @@ export const generateBlog = async (req: Request, res: Response) => {
   if (!title) return res.status(301).json({ message: "title is Required" });
   try {
     res.status(201).json({ message: "Blog generation started" });
+    console.log(`Started: ${title}`);
     setTimeout(async () => {
       await generateAndSaveBlog(title, cta_type, cta_link, image);
     }, 180000);
@@ -227,8 +228,6 @@ async function generateAndSaveBlog(
     // const subject = "Blog Generation Started";
     // await sendEmailNotification(subject, text);
 
-    console.log(`Started: ${title}`);
-
     const generatedBlogData = await generateBlogPost(title, cta_type);
     if (generatedBlogData) {
       const categoryRepository = AppDataSource.getRepository(Category);
@@ -243,7 +242,7 @@ async function generateAndSaveBlog(
         category.category = generatedBlogData.category;
         category.slug = slugify(generatedBlogData.category);
         category = await categoryRepository.save(category);
-        addToSitemap(`${process.env.CLIENT_URL}/${category.slug}`);
+        //addToSitemap(`${process.env.CLIENT_URL}/${category.slug}`);
       }
 
       let content = new Content();
