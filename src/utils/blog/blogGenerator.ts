@@ -72,7 +72,7 @@ Return the result in the following JSON only format with no additional text:
     const jsonString = result.slice(jsonStartIndex, jsonEndIndex);
 
     const cleanJsonString = jsonString.replace(
-      /[\u0000-\u001F\u007F-\u009F]/g,
+      /[\u0000-\u001F\u007F-\u009F`]/g,
       ""
     );
     try {
