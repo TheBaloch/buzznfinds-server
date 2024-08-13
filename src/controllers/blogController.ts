@@ -6,6 +6,7 @@ import { Content } from "../entities/Content";
 import { generateBlogPost } from "../utils/blog/blogGenerator";
 import { sendEmailNotification } from "../utils/mailer/sendMail";
 import { addToSitemap } from "../utils/sitemap";
+import { Tag } from "../entities/Tag";
 
 export const generateBlog = async (req: Request, res: Response) => {
   const { title, cta_link, cta_type, image, auth } = req.body;
@@ -91,7 +92,7 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
     const blogRepository = AppDataSource.getRepository(Blog);
     const blog = await blogRepository.findOne({
       where: { slug: slug },
-      relations: ["category", "content", "comments"],
+      relations: ["category", "content", "comments", "tags"],
     });
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
@@ -233,6 +234,23 @@ async function generateAndSaveBlog(
       const categoryRepository = AppDataSource.getRepository(Category);
       const blogRepository = AppDataSource.getRepository(Blog);
       const contentRepository = AppDataSource.getRepository(Content);
+      const tagRepository = AppDataSource.getRepository(Tag);
+
+      const tags = [];
+      if (generatedBlogData.tags) {
+        const generatedTags = Array(...generatedBlogData.tags);
+        for (const name of generatedTags) {
+          const existing = await tagRepository.findOneBy({ name });
+          if (existing) tags.push(existing);
+          else {
+            const newTag = new Tag();
+            newTag.name = name;
+            newTag.slug = slugify(name);
+            const savedTag = await tagRepository.save(newTag);
+            tags.push(savedTag);
+          }
+        }
+      }
 
       let category = await categoryRepository.findOneBy({
         category: generatedBlogData.category,
@@ -263,6 +281,7 @@ async function generateAndSaveBlog(
       blog.slug = generatedBlogData.slug;
       blog.mainImagePrompt = generatedBlogData.image;
       blog.author = generatedBlogData.author;
+      blog.tags = tags;
       blog.mainImage = mainImage;
       blog.status = "published";
 

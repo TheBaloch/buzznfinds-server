@@ -39,8 +39,8 @@ Return the result in the following JSON only format with no additional text:
     "metaKeywords": ["keyword1", "keyword2", "keyword3",........],
     "OGtitle": "A compelling title for social media sharing",
     "OGdescription": "A short description for social media sharing that summarizes the blog post."
-    
   },
+  "tags": ["tag1","tag2","tag3",.......]
   "introduction": "<p>Engaging introduction related to topic in HTML</p>",
   "image": "Prompt that will return a main blog image relevant to topic for ChatGPT API",
   "content": "ensure relevant html content over 2500 words (structured for readablitiy and seo)",

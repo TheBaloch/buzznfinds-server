@@ -5,6 +5,8 @@ import {
   ManyToOne,
   OneToOne,
   OneToMany,
+  ManyToMany,
+  JoinTable,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -12,6 +14,7 @@ import {
 import { Category } from "./Category";
 import { Content } from "./Content";
 import { Comment } from "./Comment";
+import { Tag } from "./Tag";
 
 @Entity()
 export class Blog {
@@ -39,6 +42,12 @@ export class Blog {
   @Column({ type: "varchar", default: "draft" })
   status!: "draft" | "published";
 
+  @Column({ type: "bigint", default: 0 })
+  views!: number;
+
+  @Column({ type: "boolean", default: false })
+  featured!: boolean;
+
   @ManyToOne(() => Category, (category) => category.blogs)
   category!: Category;
 
@@ -51,6 +60,10 @@ export class Blog {
     onDelete: "CASCADE",
   })
   comments!: Comment[];
+
+  @ManyToMany(() => Tag, (tag) => tag.blogs, { cascade: true })
+  @JoinTable()
+  tags!: Tag[];
 
   @CreateDateColumn({ type: "timestamp" })
   createdAt!: Date;

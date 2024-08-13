@@ -7,6 +7,7 @@ import { Category } from "../entities/Category";
 import { Comment } from "../entities/Comment";
 import { Content } from "../entities/Content";
 import { SiteSettings } from "../entities/SiteSettings";
+import { Tag } from "../entities/Tag";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -16,6 +17,6 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || "postgres",
   password: process.env.DB_PASSWORD || "postgres",
   database: process.env.DB_DATABASE || "blog",
-  entities: [User, Blog, Category, Comment, Content, SiteSettings],
+  entities: [User, Blog, Category, Comment, Content, SiteSettings, Tag],
   synchronize: process.env.DB_SYNCHRONIZE === "true",
 });
