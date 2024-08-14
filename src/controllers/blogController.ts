@@ -20,7 +20,7 @@ export const generateBlog = async (req: Request, res: Response) => {
     console.log(`Started: ${title}`);
     setTimeout(async () => {
       await generateAndSaveBlog(title, cta_type, cta_link, image);
-    }, 180000);
+    }, 280000);
   } catch (error) {
     console.error("Error creating blog:", error);
     return res.status(500).json({ message: "Internal server error", error });
