@@ -27,7 +27,7 @@ export class Blog {
   @Column({ type: "varchar" })
   title!: string;
 
-  @Column({ type: "text" })
+  @Column({ type: "text", nullable: true })
   overview!: string;
 
   @Column({ type: "varchar" })
