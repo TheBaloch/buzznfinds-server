@@ -7,6 +7,7 @@ import { generateBlogPost } from "../utils/blog/blogGenerator";
 //import { sendEmailNotification } from "../utils/mailer/sendMail";
 import { addToSitemap } from "../utils/sitemap";
 import { Tag } from "../entities/Tag";
+import { Not } from "typeorm";
 
 export const generateBlog = async (req: Request, res: Response) => {
   const { title, cta_link, cta_type, image, auth } = req.body;
@@ -90,14 +91,19 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
 
   try {
     const blogRepository = AppDataSource.getRepository(Blog);
+
+    // Fetch the blog by slug along with its related entities
     const blog = await blogRepository.findOne({
       where: { slug: slug },
       relations: ["category", "content", "comments", "tags"],
     });
+
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
     }
-    const related = await blogRepository
+
+    // Fetch related blogs based on tags
+    let related = await blogRepository
       .createQueryBuilder("blog")
       .innerJoin("blog.tags", "tag")
       .where("tag.id IN (:...tagIds)", {
@@ -106,6 +112,19 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
       .andWhere("blog.id != :blogId", { blogId: blog.id })
       .limit(6)
       .getMany();
+
+    // If not enough related blogs, fetch the latest blogs to fill the gap
+    if (related.length < 6) {
+      const latest = await blogRepository.find({
+        //relations: ["category"],
+        order: { createdAt: "DESC" },
+        take: 6 - related.length,
+        where: {
+          id: Not(blog.id), // Exclude the current blog
+        },
+      });
+      related = [...related, ...latest];
+    }
 
     return res.status(200).json({ blog, related });
   } catch (error) {
