@@ -97,7 +97,17 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
     }
-    return res.status(200).json(blog);
+    const related = await blogRepository
+      .createQueryBuilder("blog")
+      .innerJoin("blog.tags", "tag")
+      .where("tag.id IN (:...tagIds)", {
+        tagIds: blog.tags.map((tag) => tag.id),
+      })
+      .andWhere("blog.id != :blogId", { blogId: blog.id })
+      .limit(6)
+      .getMany();
+
+    return res.status(200).json({ blog, related });
   } catch (error) {
     console.error("Error fetching blog:", error);
     return res.status(500).json({ message: "Internal server error", error });
