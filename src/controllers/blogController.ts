@@ -4,7 +4,7 @@ import { Blog } from "../entities/Blog";
 import { Category } from "../entities/Category";
 import { Content } from "../entities/Content";
 import { generateBlogPost } from "../utils/blog/blogGenerator";
-import { sendEmailNotification } from "../utils/mailer/sendMail";
+//import { sendEmailNotification } from "../utils/mailer/sendMail";
 import { addToSitemap } from "../utils/sitemap";
 import { Tag } from "../entities/Tag";
 
@@ -288,6 +288,7 @@ async function generateAndSaveBlog(
       blog.content = content;
       blog.title = generatedBlogData.title;
       blog.subtitle = generatedBlogData.subtitle;
+      blog.overview = generatedBlogData.overview;
       blog.slug = generatedBlogData.slug;
       blog.mainImagePrompt = generatedBlogData.image;
       blog.author = generatedBlogData.author;

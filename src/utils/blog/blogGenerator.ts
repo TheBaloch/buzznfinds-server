@@ -14,6 +14,8 @@ export async function generateBlogPost(title: string, cta_type: any) {
     const prompt = `Generate a blog post on the topic "${title}" that meets the following requirements:
 * Content is human-written and not detected as AI-written.
 * Content is unique and original.
+* Content is user engaging and interesting.
+* Content stucture is fun.
 * Content is up-to-date.
 * Content is structured in HTML tags that I can use in Next.js.
 * Content is at least 2000 words or more.
@@ -33,6 +35,7 @@ Return the result in the following JSON only format with no additional text:
   "title": "Catchy title that helps in seo ranking",
   "subtitle": "Catchy subtitle",
   "slug": "seo-friendly-slug",
+  "overview":"a small seo friendly overview on the title",
   "category": "Relevant category for the blog post",
   "SEO": {
     "metaDescription": "A brief, compelling summary of the blog post, including main keywords.",

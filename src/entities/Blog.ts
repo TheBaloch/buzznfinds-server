@@ -27,6 +27,9 @@ export class Blog {
   @Column({ type: "varchar" })
   title!: string;
 
+  @Column({ type: "text" })
+  overview!: string;
+
   @Column({ type: "varchar" })
   subtitle!: string;
 
