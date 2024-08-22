@@ -38,7 +38,8 @@ export const getCategory = async (req: Request, res: Response) => {
 
 export const getCategoryBySlug = async (req: Request, res: Response) => {
   const { slug } = req.params;
-  const { limit, lang } = req.query;
+  const { limit } = req.query;
+  const { lang } = req.query;
 
   try {
     const categoryRepository = AppDataSource.getRepository(Category);
@@ -47,8 +48,6 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
       .createQueryBuilder("category")
       .leftJoinAndSelect("category.blogs", "blog")
       .leftJoinAndSelect("blog.translations", "translation")
-      .leftJoinAndSelect("blog.category", "blogCategory")
-      .leftJoinAndSelect("blog.tags", "tags")
       .orderBy("blog.createdAt", "DESC")
       .where("category.slug = :slug", { slug });
 
@@ -62,7 +61,7 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    const blogs: BlogResponse[] = category.blogs.map((blog) => {
+    const blogs = category.blogs.map((blog) => {
       const translation =
         blog.translations.find((t) => t.language === lang) ||
         blog.translations.find((t) => t.language === "en");
@@ -74,8 +73,6 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
         status: blog.status,
         views: blog.views,
         featured: blog.featured,
-        category: blog.category,
-        tags: blog.tags,
         title: translation?.title,
         subtitle: translation?.subtitle,
         overview: translation?.overview,
