@@ -102,7 +102,7 @@ export async function generateAndSaveBlog(
       await blogTranslate(finalBlog.id, "fr");
       await blogTranslate(finalBlog.id, "de");
       await blogTranslate(finalBlog.id, "ar");
-
+      await blogTranslate(finalBlog.id, "ja");
       // const text = `Link: ${process.env.BLOG_URL}/${finalBlog.slug}`;
       // const subject = "Blog Generated";
       // await sendEmailNotification(subject, text);
