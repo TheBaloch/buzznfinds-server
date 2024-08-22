@@ -7,7 +7,7 @@ import { generateBlogPost } from "../utils/blog/blogGenerator";
 //import { sendEmailNotification } from "../utils/mailer/sendMail";
 import { addToSitemap } from "../utils/sitemap";
 import { Tag } from "../entities/Tag";
-import { Not } from "typeorm";
+import { Brackets, Not } from "typeorm";
 
 export const generateBlog = async (req: Request, res: Response) => {
   const { title, cta_link, cta_type, image, auth } = req.body;
@@ -92,7 +92,6 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
   try {
     const blogRepository = AppDataSource.getRepository(Blog);
 
-    // Fetch the blog by slug along with its related entities
     const blog = await blogRepository.findOne({
       where: { slug: slug },
       relations: ["category", "content", "comments", "tags"],
@@ -102,26 +101,33 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Blog not found" });
     }
 
-    // Fetch related blogs based on tags
-    let related = await blogRepository
+    const relatedQuery = blogRepository
       .createQueryBuilder("blog")
-      .innerJoin("blog.tags", "tag")
-      .where("tag.id IN (:...tagIds)", {
-        tagIds: blog.tags.map((tag) => tag.id),
-      })
-      .andWhere("blog.id != :blogId", { blogId: blog.id })
-      .limit(6)
-      .getMany();
+      .orderBy("blog.createdAt", "DESC")
+      .limit(6);
 
-    // If not enough related blogs, fetch the latest blogs to fill the gap
+    if (blog.tags.length > 0) {
+      relatedQuery
+        .leftJoin("blog.tags", "tag")
+        .where(
+          new Brackets((qb) => {
+            qb.where("tag.id IN (:...tagIds)", {
+              tagIds: blog.tags.map((tag) => tag.id),
+            }).andWhere("blog.id != :blogId", { blogId: blog.id });
+          })
+        )
+        .orWhere("tag.id IS NULL");
+    } else {
+      relatedQuery.where("blog.id != :blogId", { blogId: blog.id });
+    }
+
+    let related = await relatedQuery.getMany();
+
     if (related.length < 6) {
       const latest = await blogRepository.find({
-        //relations: ["category"],
+        where: { id: Not(blog.id) },
         order: { createdAt: "DESC" },
         take: 6 - related.length,
-        where: {
-          id: Not(blog.id), // Exclude the current blog
-        },
       });
       related = [...related, ...latest];
     }
@@ -129,9 +135,74 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
     return res.status(200).json({ blog, related });
   } catch (error) {
     console.error("Error fetching blog:", error);
-    return res.status(500).json({ message: "Internal server error", error });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// export const getBlogBySlug = async (req: Request, res: Response) => {
+//   const { slug } = req.params;
+
+//   try {
+//     const blogRepository = AppDataSource.getRepository(Blog);
+
+//     // Fetch the blog by slug along with its related entities
+//     const blog = await blogRepository.findOne({
+//       where: { slug: slug },
+//       relations: ["category", "content", "comments", "tags"],
+//     });
+
+//     if (!blog) {
+//       return res.status(404).json({ message: "Blog not found" });
+//     }
+
+//     // // Fetch related blogs based on tags
+//     // let related: Blog[] = [];
+//     // if (blog?.tags?.length > 0) {
+//     //   related = await blogRepository
+//     //     .createQueryBuilder("blog")
+//     //     .innerJoin("blog.tags", "tag")
+//     //     .where("tag.id IN (:...tagIds)", {
+//     //       tagIds: blog.tags.map((tag) => tag.id),
+//     //     })
+//     //     .andWhere("blog.id != :blogId", { blogId: blog.id })
+//     //     .limit(6)
+//     //     .getMany();
+//     // }
+
+//     // // If not enough related blogs, fetch the latest blogs to fill the gap
+//     // if (related.length < 6) {
+//     //   const latest = await blogRepository.find({
+//     //     //relations: ["category"],
+//     //     order: { createdAt: "DESC" },
+//     //     take: 6 - related.length,
+//     //     where: {
+//     //       id: Not(blog.id), // Exclude the current blog
+//     //     },
+//     //   });
+//     //   related = [...related, ...latest];
+//     // }
+
+//     const related = await blogRepository
+//       .createQueryBuilder("blog")
+//       .leftJoin("blog.tags", "tag")
+//       .where(
+//         new Brackets((qb) => {
+//           qb.where("tag.id IN (:...tagIds)", {
+//             tagIds: blog.tags.map((tag) => tag.id),
+//           }).andWhere("blog.id != :blogId", { blogId: blog.id });
+//         })
+//       )
+//       .orWhere("tag.id IS NULL")
+//       .orderBy("blog.createdAt", "DESC")
+//       .limit(6)
+//       .getMany();
+
+//     return res.status(200).json({ blog, related });
+//   } catch (error) {
+//     console.error("Error fetching blog:", error);
+//     return res.status(500).json({ message: "Internal server error", error });
+//   }
+// };
 
 export const updateBlog = async (req: Request, res: Response) => {
   const { id } = req.params;
