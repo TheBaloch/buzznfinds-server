@@ -1,10 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { Blog } from "./Blog";
 
 @Entity()
 export class Content {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ type: "varchar" })
+  language!: string;
 
   @Column({ type: "text" })
   introduction!: string;
@@ -26,4 +29,7 @@ export class Content {
 
   @Column({ type: "text" })
   conclusion!: string;
+
+  @ManyToOne(() => Blog, (blog) => blog.contents)
+  blog!: Blog;
 }

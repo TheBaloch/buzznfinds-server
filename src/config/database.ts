@@ -8,6 +8,8 @@ import { Comment } from "../entities/Comment";
 import { Content } from "../entities/Content";
 import { SiteSettings } from "../entities/SiteSettings";
 import { Tag } from "../entities/Tag";
+import { BlogTranslation } from "../entities/BlogTranslation";
+import { SubCategory } from "../entities/SubCategory";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -17,6 +19,16 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || "postgres",
   password: process.env.DB_PASSWORD || "postgres",
   database: process.env.DB_DATABASE || "blog",
-  entities: [User, Blog, Category, Comment, Content, SiteSettings, Tag],
+  entities: [
+    User,
+    Blog,
+    Category,
+    Comment,
+    Content,
+    SiteSettings,
+    Tag,
+    BlogTranslation,
+    SubCategory,
+  ],
   synchronize: process.env.DB_SYNCHRONIZE === "true",
 });

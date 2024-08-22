@@ -9,7 +9,7 @@ import {
 import { Blog } from "./Blog";
 
 @Entity()
-export class Category {
+export class SubCategory {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -19,7 +19,7 @@ export class Category {
   @Column({ type: "varchar" })
   name!: string;
 
-  @OneToMany(() => Blog, (blog) => blog.category)
+  @OneToMany(() => Blog, (blog) => blog.subcategory)
   blogs!: Blog[];
 
   @CreateDateColumn({ type: "timestamp" })

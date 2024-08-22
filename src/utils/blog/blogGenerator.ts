@@ -1,4 +1,4 @@
-const OpenAI = require("openai");
+import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -18,7 +18,7 @@ export async function generateBlogPost(title: string, cta_type: any) {
 * Content stucture is fun.
 * Content is up-to-date.
 * Content is structured in HTML tags that I can use in Next.js.
-* Content is at least 2000 words or more.
+* Content is at least 2500 words or more.
 * Content is fully SEO optimized and friendly.
 
 Ensure the blog post includes:
@@ -32,33 +32,32 @@ Ensure the blog post includes:
 Return the result in the following JSON only format with no additional text:
 
 {
-  "title": "Catchy title that helps in seo ranking",
-  "subtitle": "Catchy subtitle",
-  "slug": "seo-friendly-slug",
-  "overview":"a small seo friendly overview on the title",
-  "category": "Relevant category for the blog post",
+  "title": "Craft a catchy and SEO-optimized title that aligns with the blog's topic.",
+  "subtitle": "Create a catchy and engaging subtitle that complements the title.",
+  "slug": "Generate an SEO-friendly slug based on the title.",
+  "overview": "Write a brief, SEO-friendly overview that captures the essence of the title and engages readers.",
+  "category": "Assign a relevant main category, such as 'Technology', 'Health', etc.",
+  "subcategory": "Assign an appropriate subcategory under the main category.",
   "SEO": {
-    "metaDescription": "A brief, compelling summary of the blog post, including main keywords.",
-    "metaKeywords": ["keyword1", "keyword2", "keyword3",........],
-    "OGtitle": "A compelling title for social media sharing",
-    "OGdescription": "A short description for social media sharing that summarizes the blog post."
+    "metaDescription": "Write a brief, compelling meta description that includes main keywords and summarizes the blog post.",
+    "metaKeywords": ["keyword1", "keyword2", "keyword3", "additional relevant keywords"],
+    "OGtitle": "Craft a compelling and shareable title for social media.",
+    "OGdescription": "Write a short, engaging description for social media sharing that summarizes the blog post."
   },
-  "tags": ["tag1","tag2","tag3",.......]
-  "introduction": "<p>Engaging introduction related to topic in HTML</p>",
-  "image": "Prompt that will return a main blog image relevant to topic for ChatGPT API",
-  "content": "ensure relevant html content over 2500 words (structured for readablitiy and seo)",
-  "conclusion": "<p>Conclusion in HTML</p>",
-  "callToAction": "relevant callToAction text for ${cta_type}"}",
-  "author":{
-      "name":"Random author name that feels authentic",
-      "about":"author about related to feild about the topic"
+  "tags": ["tag1", "tag2", "tag3", "additional relevant tags"],
+  "introduction": "<p>Write an engaging introduction related to the topic, in HTML format.</p>",
+  "content": "Create detailed, relevant HTML content that exceeds 2500 words, structured for readability and SEO.",
+  "conclusion": "<p>Write a concise and thoughtful conclusion in HTML format.</p>",
+  "callToAction": "Generate a relevant call-to-action text tailored to ${cta_type}, encouraging reader engagement.",
+  "author": {
+    "name": "Generate an authentic author name that fits the tone and subject of the blog. Consider historical figures or well-known names related to the topic for inspiration.",
+    "about": "Write a compelling author bio that highlights expertise and background relevant to the blog topic, including notable achievements and experience."
   }
 }
 `;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
-
       messages: [
         {
           role: "system",
@@ -70,6 +69,10 @@ Return the result in the following JSON only format with no additional text:
     });
 
     const result = completion.choices[0].message.content;
+    if (!result) {
+      console.error("openai returned no resposne in api in blog generator");
+      return;
+    }
     const jsonStartIndex = result.indexOf("{");
     const jsonEndIndex = result.lastIndexOf("}") + 1;
     const jsonString = result.slice(jsonStartIndex, jsonEndIndex);

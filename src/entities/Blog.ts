@@ -3,11 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  OneToOne,
   OneToMany,
   ManyToMany,
   JoinTable,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -15,6 +13,8 @@ import { Category } from "./Category";
 import { Content } from "./Content";
 import { Comment } from "./Comment";
 import { Tag } from "./Tag";
+import { BlogTranslation } from "./BlogTranslation";
+import { SubCategory } from "./SubCategory";
 
 @Entity()
 export class Blog {
@@ -24,23 +24,8 @@ export class Blog {
   @Column({ unique: true, type: "varchar" })
   slug!: string;
 
-  @Column({ type: "varchar" })
-  title!: string;
-
-  @Column({ type: "text", nullable: true })
-  overview!: string;
-
-  @Column({ type: "varchar" })
-  subtitle!: string;
-
-  @Column({ type: "varchar" })
-  mainImagePrompt!: string;
-
   @Column({ type: "json", nullable: true })
   mainImage!: any;
-
-  @Column({ type: "json", nullable: true })
-  author!: any;
 
   @Column({ type: "varchar", default: "draft" })
   status!: "draft" | "published";
@@ -54,9 +39,14 @@ export class Blog {
   @ManyToOne(() => Category, (category) => category.blogs)
   category!: Category;
 
-  @OneToOne(() => Content, { cascade: true, onDelete: "CASCADE" })
-  @JoinColumn()
-  content!: Content;
+  @ManyToOne(() => Category, (category) => category.blogs)
+  subcategory!: SubCategory;
+
+  @OneToMany(() => Content, (content) => content.blog, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  contents!: Content[];
 
   @OneToMany(() => Comment, (comment) => comment.blog, {
     cascade: true,
@@ -67,6 +57,12 @@ export class Blog {
   @ManyToMany(() => Tag, (tag) => tag.blogs, { cascade: true })
   @JoinTable()
   tags!: Tag[];
+
+  @OneToMany(() => BlogTranslation, (translation) => translation.blog, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  translations!: BlogTranslation[];
 
   @CreateDateColumn({ type: "timestamp" })
   createdAt!: Date;
