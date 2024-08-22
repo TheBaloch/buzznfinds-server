@@ -38,7 +38,7 @@ export const getCategory = async (req: Request, res: Response) => {
 
 export const getCategoryBySlug = async (req: Request, res: Response) => {
   const { slug } = req.params;
-  const { limit, lang = "en" } = req.query;
+  const { limit, lang } = req.query;
 
   try {
     const categoryRepository = AppDataSource.getRepository(Category);
