@@ -94,15 +94,14 @@ export async function generateAndSaveBlog(
       blog.status = "published";
 
       const finalBlog = await blogRepository.save(blog);
+      addToSitemap(
+        `${process.env.CLIENT_URL}/en/${process.env.BLOG_PATH}/${finalBlog.slug}`
+      );
       console.log(`Generated: ${blog.slug}`);
       await blogTranslate(finalBlog.id, "es");
       await blogTranslate(finalBlog.id, "fr");
       await blogTranslate(finalBlog.id, "de");
       await blogTranslate(finalBlog.id, "ar");
-
-      addToSitemap(
-        `${process.env.CLIENT_URL}/en/${process.env.BLOG_PATH}/${finalBlog.slug}`
-      );
 
       // const text = `Link: ${process.env.BLOG_URL}/${finalBlog.slug}`;
       // const subject = "Blog Generated";
