@@ -39,7 +39,7 @@ export class Blog {
   @ManyToOne(() => Category, (category) => category.blogs)
   category!: Category;
 
-  @ManyToOne(() => Category, (category) => category.blogs)
+  @ManyToOne(() => SubCategory, (subcategory) => subcategory.blogs)
   subcategory!: SubCategory;
 
   @OneToMany(() => Content, (content) => content.blog, {
