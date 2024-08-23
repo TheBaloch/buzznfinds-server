@@ -86,6 +86,7 @@ export async function generateAndSaveBlog(
 
       let blog = new Blog();
       blog.category = category;
+      blog.subcategory = subcategory;
       blog.contents = [content];
       blog.translations = [blogTranslation];
       blog.slug = generatedBlogData.slug;
