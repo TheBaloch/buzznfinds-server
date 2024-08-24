@@ -168,7 +168,7 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
         .leftJoinAndSelect("blog.translations", "translation")
         .where("blog.id != :blogId", { blogId: blog.id })
         .orderBy("blog.createdAt", "DESC")
-        //.limit(6 - relatedBlogs.length)
+        .limit(10)
         .getMany();
 
       relatedBlogs.push(...additionalBlogs);
