@@ -172,7 +172,7 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
           categoryId: blog.category.id,
         })
         .orderBy("blog.createdAt", "DESC")
-        .take(6)
+        .take(6 - relatedBlogs.length)
         .getMany();
 
       relatedBlogs.push(...additionalBlogs);
