@@ -183,17 +183,14 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
       const relatedTranslation =
         relatedBlog.translations.find((t) => t.language === lang) ||
         relatedBlog.translations.find((t) => t.language === "en");
-
+      //ADD fields here if needed
       return {
         id: relatedBlog.id,
         slug: relatedBlog.slug,
         mainImage: relatedBlog.mainImage,
-        status: relatedBlog.status,
-        views: relatedBlog.views,
         featured: relatedBlog.featured,
         category: relatedBlog.category,
         subcategory: relatedBlog.subcategory,
-        tags: relatedBlog.tags,
         title: relatedTranslation?.title,
         subtitle: relatedTranslation?.subtitle,
         overview: relatedTranslation?.overview,
