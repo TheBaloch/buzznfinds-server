@@ -52,7 +52,7 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
       .where("category.slug = :slug", { slug });
 
     if (limit) {
-      categoryQuery.limit(Number(limit));
+      categoryQuery.take(Number(limit));
     }
 
     const category = await categoryQuery.getOne();
