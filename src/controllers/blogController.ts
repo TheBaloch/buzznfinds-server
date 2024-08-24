@@ -168,7 +168,7 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
         .leftJoinAndSelect("blog.translations", "translation")
         .leftJoinAndSelect("blog.category", "category")
         .where("blog.id != :blogId", { blogId: blog.id })
-        .where("blog.category.id == :categoryId", {
+        .andWhere("blog.category.id = :categoryId", {
           categoryId: blog.category.id,
         })
         .orderBy("blog.createdAt", "DESC")
