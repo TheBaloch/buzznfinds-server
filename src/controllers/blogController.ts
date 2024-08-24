@@ -166,9 +166,13 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
       const additionalBlogs = await blogRepository
         .createQueryBuilder("blog")
         .leftJoinAndSelect("blog.translations", "translation")
+        .leftJoinAndSelect("blog.category", "category")
         .where("blog.id != :blogId", { blogId: blog.id })
+        .where("blog.category.id == :categoryId", {
+          categoryId: blog.category.id,
+        })
         .orderBy("blog.createdAt", "DESC")
-        .limit(10)
+        .take(6)
         .getMany();
 
       relatedBlogs.push(...additionalBlogs);
