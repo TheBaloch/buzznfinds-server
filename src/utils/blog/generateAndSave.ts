@@ -8,6 +8,11 @@ import { Tag } from "../../entities/Tag";
 import { addToSitemap } from "../sitemap";
 import { generateBlogPost } from "./blogGenerator";
 import blogTranslate from "./blogTranslator";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function generateAndSaveBlog(
   title: string,
@@ -33,7 +38,9 @@ export async function generateAndSaveBlog(
       if (generatedBlogData.tags) {
         const generatedTags = Array(...generatedBlogData.tags);
         for (const name of generatedTags) {
-          const existing = await tagRepository.findOneBy({ name });
+          const existing = await tagRepository.findOneBy({
+            slug: slugify(name),
+          });
           if (existing) tags.push(existing);
           else {
             const newTag = new Tag();
@@ -46,7 +53,7 @@ export async function generateAndSaveBlog(
       }
 
       let category = await categoryRepository.findOneBy({
-        name: generatedBlogData.category,
+        slug: slugify(generatedBlogData.category),
       });
       if (!category) {
         category = new Category();
@@ -56,7 +63,7 @@ export async function generateAndSaveBlog(
       }
 
       let subcategory = await subcategoryRepository.findOneBy({
-        name: generatedBlogData.subcategory,
+        slug: slugify(generatedBlogData.subcategory),
       });
       if (!subcategory) {
         subcategory = new SubCategory();
@@ -85,6 +92,40 @@ export async function generateAndSaveBlog(
       blogTranslation = await blogTranslationRepository.save(blogTranslation);
 
       let blog = new Blog();
+      let existing = await blogRepository.findOneBy({
+        slug: generatedBlogData.slug,
+      });
+      if (existing) {
+        for (let i = 0; ; i++) {
+          if (i < 3) {
+            const newslug = slugify(
+              await generateNewSlug(generatedBlogData.slug)
+            );
+            if (newslug) {
+              existing = await blogRepository.findOneBy({
+                slug: newslug,
+              });
+
+              if (!existing) {
+                blog.slug = newslug;
+                break;
+              }
+            }
+          } else {
+            existing = await blogRepository.findOneBy({
+              slug: `${generatedBlogData.slug}-${i}`,
+            });
+
+            if (!existing) {
+              blog.slug = `${generatedBlogData.slug}-${i}`;
+              break;
+            }
+          }
+        }
+      } else {
+        blog.slug = generatedBlogData.slug;
+      }
+
       blog.category = category;
       blog.subcategory = subcategory;
       blog.contents = [content];
@@ -129,4 +170,41 @@ function slugify(text: string) {
     .replace(/[^\w\s-]/g, "") // Remove all non-word characters, except whitespace and hyphen
     .replace(/\s+/g, "-") // Replace spaces with hyphens
     .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
+}
+
+async function generateNewSlug(existing: string): Promise<string> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an expert at generating unique and SEO-friendly slugs for blog posts.",
+        },
+        {
+          role: "user",
+          content: `The existing slug "${existing}" is already in the database. Please generate a new, relevant slug.`,
+        },
+      ],
+    });
+
+    if (!completion.choices || completion.choices.length === 0) {
+      console.error("OpenAI returned no choices in the API response.");
+      throw new Error("Empty response from OpenAI.");
+    }
+
+    const result = completion.choices[0].message?.content?.trim();
+    if (!result) {
+      console.error("OpenAI returned an empty message content.");
+      throw new Error("Empty response content from OpenAI.");
+    }
+
+    const cleanText = result.replace(/[\u0000-\u001F\u007F-\u009F`]/g, "");
+
+    return cleanText;
+  } catch (error) {
+    console.error("Error generating a new slug:", error);
+    throw new Error("Failed to generate a new slug.");
+  }
 }
