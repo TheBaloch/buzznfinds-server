@@ -3,11 +3,7 @@ import { AppDataSource } from "../config/database";
 import { Blog } from "../entities/Blog";
 import { Category } from "../entities/Category";
 import { Content } from "../entities/Content";
-// import { generateBlogPost } from "../utils/blog/blogGenerator";
-// import { sendEmailNotification } from "../utils/mailer/sendMail";
-// import { addToSitemap } from "../utils/sitemap";
-// import { Tag } from "../entities/Tag";
-import { Brackets, Not } from "typeorm";
+import { Brackets } from "typeorm";
 import { generateAndSaveBlog } from "../utils/blog/generateAndSave";
 
 export const generateBlog = async (req: Request, res: Response) => {

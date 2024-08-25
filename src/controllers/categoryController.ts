@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../config/database";
 import { Category } from "../entities/Category";
+import { Blog } from "../entities/Blog";
 
 // Interface for the response data structure
 interface BlogResponse {
@@ -38,30 +39,27 @@ export const getCategory = async (req: Request, res: Response) => {
 
 export const getCategoryBySlug = async (req: Request, res: Response) => {
   const { slug } = req.params;
-  const { limit } = req.query;
-  const { lang } = req.query;
+  const { page = 1, limit = 10, lang = "en" } = req.query;
 
   try {
     const categoryRepository = AppDataSource.getRepository(Category);
+    const blogRepository = AppDataSource.getRepository(Blog);
 
-    const categoryQuery = categoryRepository
-      .createQueryBuilder("category")
-      .leftJoinAndSelect("category.blogs", "blog")
-      .leftJoinAndSelect("blog.translations", "translation")
-      .orderBy("blog.createdAt", "DESC")
-      .where("category.slug = :slug", { slug });
-
-    if (limit) {
-      categoryQuery.take(Number(limit));
-    }
-
-    const category = await categoryQuery.getOne();
+    const category = await categoryRepository.findOneBy({ slug });
 
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
+    const [blogs, total] = await blogRepository.findAndCount({
+      where: { category },
+      relations: ["translations"],
+      order: { createdAt: "DESC" },
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+    });
+    const totalPages = Math.ceil(total / Number(limit));
 
-    const blogs = category.blogs.map((blog) => {
+    const Blogs = blogs.map((blog) => {
       const translation =
         blog.translations.find((t) => t.language === lang) ||
         blog.translations.find((t) => t.language === "en");
@@ -83,12 +81,17 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
     });
 
     return res.status(200).json({
-      id: category.id,
       slug: category.slug,
       name: category.name,
-      createdAt: category.createdAt,
-      updatedAt: category.updatedAt,
-      blogs,
+      blogs: {
+        data: Blogs,
+        pagination: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPages,
+        },
+      },
     });
   } catch (error) {
     console.error("Error fetching category by slug:", error);
