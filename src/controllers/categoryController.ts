@@ -51,7 +51,7 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Category not found" });
     }
     const [blogs, total] = await blogRepository.findAndCount({
-      where: { category: { id: category.id } },
+      where: { category },
       relations: ["translations", "category"],
       // order: { createdAt: "DESC" },
       // skip: (Number(page) - 1) * Number(limit),
