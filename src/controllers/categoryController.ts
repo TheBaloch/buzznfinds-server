@@ -51,13 +51,13 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Category not found" });
     }
     const [blogs, total] = await blogRepository.findAndCount({
-      where: { category },
+      where: { category: { id: category.id } },
       relations: ["translations"],
-      order: { createdAt: "DESC" },
-      skip: (Number(page) - 1) * Number(limit),
-      take: Number(limit),
+      // order: { createdAt: "DESC" },
+      // skip: (Number(page) - 1) * Number(limit),
+      // take: Number(limit),
     });
-    const totalPages = Math.ceil(total / Number(limit));
+    //const totalPages = Math.ceil(total / Number(limit));
 
     const Blogs = blogs.map((blog) => {
       const translation =
@@ -85,12 +85,12 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
       name: category.name,
       blogs: {
         data: Blogs,
-        pagination: {
-          total,
-          page: Number(page),
-          limit: Number(limit),
-          totalPages,
-        },
+        // pagination: {
+        //   total,
+        //   page: Number(page),
+        //   limit: Number(limit),
+        //   totalPages,
+        // },
       },
     });
   } catch (error) {
