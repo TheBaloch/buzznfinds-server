@@ -52,7 +52,7 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
     }
     const [blogs, total] = await blogRepository.findAndCount({
       where: { category: { id: category.id } },
-      relations: ["translations"],
+      relations: ["translations", "category"],
       // order: { createdAt: "DESC" },
       // skip: (Number(page) - 1) * Number(limit),
       // take: Number(limit),
