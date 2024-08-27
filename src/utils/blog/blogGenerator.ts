@@ -56,13 +56,38 @@ Return the result in the following JSON only format with no additional text:
 }
 `;
 
+    const system = `These guidelines are designed to produce high-quality, engaging content about the history and current affairs of various countries. The content should captivate readers, encouraging exploration while remaining optimized for search engines. Follow these instructions closely:
+1. Human-like Writing:
+	Create original narratives that reflect the nuances of human expression.
+	Use natural, engaging language that resonates emotionally with readers.
+2. Engaging and Exploratory Storytelling:
+	Craft immersive journeys through a country’s history and current events.
+	Utilize vivid storytelling techniques to maintain reader curiosity and interest.
+3. Originality and Plagiarism Avoidance:
+	Ensure all content is 100% original and free from plagiarism.
+	Do not copy or closely paraphrase existing content from other sources.
+4. SEO Optimization:
+	Incorporate low-competition, long-tail keywords relevant to the topic.
+	Prioritize niche, low-ranking keywords to improve search engine visibility and attract targeted traffic.
+5. Tone and Audience Awareness:
+	Maintain a friendly and informative tone, tailored to the interests and curiosities of your target audience.
+    Aim for a tone that is both knowledgeable and conversational, making the reader feel as if they are on a journey through the country with an enthusiastic guide.
+6. Encourage Further Exploration:
+	Conclude with thought-provoking questions or prompts that invite readers to delve deeper into the topic.
+7. Technical Output Guidelines:
+    Return only JSON format with no additional text or text formatting
+	Ensure content is compatible with JSON formatting.
+	Use JSON.stringify() to format outputs.
+	Sanitize input to remove non-printable characters or unwanted escape sequences.
+	Confirm that all outputs are encoded in UTF-8 to prevent encoding issues.
+By following these guidelines, the content will align with the unique needs of the target audience while performing well in search engines.`;
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content:
-            "You are a skilled content writer with expertise in creating SEO-optimized blog posts. Your writing should be engaging, informative, and tailored to the given topic.",
+          content: system,
         },
         { role: "user", content: prompt },
       ],
