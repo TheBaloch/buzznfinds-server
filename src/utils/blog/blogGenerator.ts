@@ -46,7 +46,7 @@ export async function generateBlogPost(title: string, cta_type: any) {
 
 3. **Unique and Plagiarism-Free Content**: Ensure all content is 100% original, adding unique perspectives, new insights, and data where possible. Include external and internal linking to credible sources and related content to improve authority.
 
-4. **Highly Engaging Content Structure**: Use short paragraphs, bullet points, numbered lists, and eye-catching headings to make content easily scannable. Include multimedia elements like images, infographics, and videos to enhance user experience and engagement.
+4. **Highly Engaging Content Structure**: Use short paragraphs, bullet points, numbered lists, and eye-catching headings to make content easily scannable.
 
 5. **Call-to-Action and Engagement Hooks**: Insert compelling call-to-actions (CTAs) throughout the content, encouraging comments, shares, or subscriptions. Use hooks at the beginning and end of the content to capture attention and provoke thought.
 
@@ -55,6 +55,10 @@ export async function generateBlogPost(title: string, cta_type: any) {
 7. **Social Media Optimization**: Craft shareable meta descriptions, images, and Open Graph tags to enhance social media engagement and click-through rates.
 
 8. **Continuous Improvement**: Suggest A/B testing of headlines, CTAs, and content variations to determine the best-performing versions.
+
+9. **Content**: Ensure content covers all aspects of the topic and is up-to-date.
+
+10. **Output Format**: Ensure the output is structured in JSON format as specified in the prompt. Avoid including any additional text or formatting outside the JSON structure.
 `;
 
     const completion = await openai.chat.completions.create({
@@ -68,29 +72,36 @@ export async function generateBlogPost(title: string, cta_type: any) {
       ],
     });
 
-    const result = completion.choices[0].message.content;
+    const result = completion.choices[0]?.message?.content;
     if (!result) {
       console.error("OpenAI returned no response in API in blog generator");
       return;
     }
+
+    // Improved cleaning and validation of JSON string
     const jsonStartIndex = result.indexOf("{");
     const jsonEndIndex = result.lastIndexOf("}") + 1;
     const jsonString = result.slice(jsonStartIndex, jsonEndIndex);
 
-    const cleanJsonString = jsonString.replace(
-      /[\u0000-\u001F\u007F-\u009F`]/g,
-      ""
-    );
+    // Further clean the JSON string to remove unwanted characters
+    const cleanJsonString = jsonString
+      .replace(/[\u0000-\u001F\u007F-\u009F`]/g, "") // Remove non-printable characters
+      .replace(/\\n/g, "") // Remove line breaks
+      .replace(/\\t/g, "") // Remove tabs
+      .replace(/\\r/g, "") // Remove carriage returns
+      .replace(/\\(?!")/g, ""); // Remove backslashes not followed by a quote
+
+    // Validate JSON format before parsing
     try {
       const blogData = JSON.parse(cleanJsonString);
       return blogData;
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
-      console.error("Raw JSON string:", cleanJsonString);
+      console.error("Raw JSON string after cleaning:", cleanJsonString);
       return null;
     }
-  } catch (error) {
-    console.error("Error during API call:", error);
+  } catch (error: any) {
+    console.error("Error during API call:", error.message);
     return null;
   }
 }
