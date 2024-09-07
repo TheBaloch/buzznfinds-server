@@ -5,19 +5,20 @@ const openai = new OpenAI({
 });
 
 /**
- * Generates an SEO-friendly blog post based on the provided title.
+ * Generates a unique, high-quality blog post based on the provided title.
+ * Ensures content is undetectable as AI-written and avoids plagiarism.
  * @param {string} title - The title of the blog post.
  * @returns {Object} The generated blog content as a JSON object.
  */
 export async function generateBlogPost(title: string, cta_type: any) {
   try {
-    const prompt = `Generate a blog post on the topic "${title}" with the following output format and additional SEO and engagement optimizations:
+    const prompt = `Generate a long, unique blog post on the topic "${title}" following this format. The content must not trigger AI detection or be flagged as plagiarized. Focus on human-like writing styles and original insights:
 
 {
   "title": "SEO-optimized title with power words and emotional triggers.",
   "subtitle": "Catchy subtitle that creates curiosity and complements the title.",
   "slug": "SEO-friendly slug based on the title.",
-  "overview": "Brief, engaging overview of the topic, optimized for SEO.",
+  "overview": "Engaging and unique overview of the topic, optimized for SEO.",
   "category": "Relevant main category (e.g., 'Digital Marketing').",
   "subcategory": "Appropriate subcategory (e.g., 'SEO Strategies').",
   "SEO": {
@@ -26,40 +27,32 @@ export async function generateBlogPost(title: string, cta_type: any) {
     "OGtitle": "Shareable title for social media with a call to action.",
     "OGdescription": "Short, engaging description for social media."
   },
-  "tags": ["SEO tips", "user engagement", "digital marketing"],
-  "introduction": "<p>Attention-grabbing introduction using a hook, a question, or a surprising fact.</p>",
-  "content": "Detailed HTML content including headings, subheadings, bullet points, multimedia elements, internal and external links, and engagement triggers.",
-  "conclusion": "<p>Strong conclusion summarizing key points and including a call-to-action (CTA).</p>",
-  "callToAction": "Relevant CTA encouraging shares, comments, or subscriptions tailored to ${cta_type}.",
+  "tags": ["tag1", "tag2", "more tags","..","as many as suitable"],
+  "introduction": "<p>Engaging introduction using storytelling or a hook, setting the stage for the topic.</p>",
+  "content": "Detailed HTML content with unique insights, including sections with clear headings, subheadings, bullet points, quotes. Avoid redundancy while making sure the writing is varied and conversational.",
+  "conclusion": "<p>Conclusion summarizing the key takeaways with a strong CTA.</p>",
+  "callToAction": "Relevant CTA encouraging user interaction like ${cta_type}.",
   "author": {
     "name": "Authentic author name to enhance credibility.",
-    "about": "Compelling author bio highlighting expertise and experience."
+    "about": "Compelling author bio highlighting expertise."
   }
-}
-`;
+}`;
 
-    const system = `Create highly engaging, SEO-optimized content designed to maximize user retention, interaction, and search visibility. Follow these enhanced instructions:
+    const system = `Create a highly engaging and unique blog post with original insights that is undetectable as AI-generated and free of plagiarism. Follow these detailed instructions:
 
-1. **Human-like Writing**: Use a conversational tone with varied sentence structures, questions, and relatable language. Incorporate storytelling elements, humor, and personal anecdotes to make the content more relatable.
+1. **Original Insights**: Ensure all content is 100% unique, providing new insights, analyses, and perspectives. Do not reuse or closely mirror any existing content.
 
-2. **Advanced SEO Tactics**: Focus on low-competition, long-tail keywords and include related NLP and LSI keywords. Use keywords naturally in headings, subheadings, meta descriptions, alt texts, and throughout the body content. Optimize for featured snippets and "People Also Ask" sections by including question-based subheadings and concise answers.
+2. **Human-Like Writing**: Vary sentence structure and use conversational language with personal anecdotes, humor, or storytelling elements to mimic natural human writing.
 
-3. **Unique and Plagiarism-Free Content**: Ensure all content is 100% original, adding unique perspectives, new insights, and data where possible. Include external and internal linking to credible sources and related content to improve authority.
+3. **Avoid AI Detection**: Write content that avoids typical AI detection patterns such as overly formal or generic language. Ensure diverse vocabulary and natural transitions.
 
-4. **Highly Engaging Content Structure**: Use short paragraphs, bullet points, numbered lists, and eye-catching headings to make content easily scannable.
+4. **SEO Optimization**: Integrate low-competition keywords and optimize for snippets, "People Also Ask" sections, and other SEO features. Use the keywords naturally within headings and content.
 
-5. **Call-to-Action and Engagement Hooks**: Insert compelling call-to-actions (CTAs) throughout the content, encouraging comments, shares, or subscriptions. Use hooks at the beginning and end of the content to capture attention and provoke thought.
+5. **Readable and Engaging Structure**: Break up content into short paragraphs with clear headings, bullet points, and varied sentence lengths to maintain engagement. Use rhetorical questions and thought-provoking ideas to enhance engagement.
 
-6. **Structured Data and Schema Markup**: Include structured data for FAQs, articles, or reviews to improve visibility in search results. Use schema markup to help search engines understand the content better.
+6. **Avoid Redundancy**: Ensure no repeated information or phrases. Provide new angles on the topic in each section to keep the content fresh.
 
-7. **Social Media Optimization**: Craft shareable meta descriptions, images, and Open Graph tags to enhance social media engagement and click-through rates.
-
-8. **Continuous Improvement**: Suggest A/B testing of headlines, CTAs, and content variations to determine the best-performing versions.
-
-9. **Content**: Ensure content covers all aspects of the topic and is up-to-date.
-
-10. **Output Format**: Ensure the output is structured in JSON format as specified in the prompt. Avoid including any additional text or formatting outside the JSON structure.
-`;
+7. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
@@ -78,20 +71,17 @@ export async function generateBlogPost(title: string, cta_type: any) {
       return;
     }
 
-    // Improved cleaning and validation of JSON string
     const jsonStartIndex = result.indexOf("{");
     const jsonEndIndex = result.lastIndexOf("}") + 1;
     const jsonString = result.slice(jsonStartIndex, jsonEndIndex);
 
-    // Further clean the JSON string to remove unwanted characters
     const cleanJsonString = jsonString
-      .replace(/[\u0000-\u001F\u007F-\u009F`]/g, "") // Remove non-printable characters
-      .replace(/\\n/g, "") // Remove line breaks
-      .replace(/\\t/g, "") // Remove tabs
-      .replace(/\\r/g, "") // Remove carriage returns
-      .replace(/\\(?!")/g, ""); // Remove backslashes not followed by a quote
+      .replace(/[\u0000-\u001F\u007F-\u009F`]/g, "")
+      .replace(/\\n/g, "")
+      .replace(/\\t/g, "")
+      .replace(/\\r/g, "")
+      .replace(/\\(?!")/g, "");
 
-    // Validate JSON format before parsing
     try {
       const blogData = JSON.parse(cleanJsonString);
       return blogData;
