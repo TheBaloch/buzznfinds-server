@@ -213,6 +213,8 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
         author: translation?.author,
         introduction: content?.introduction,
         content: content?.content,
+        content1: content?.content1,
+        content2: content?.content2,
         SEO: content?.SEO,
         cta: content?.cta,
         cta_link: content?.cta_link,
