@@ -29,7 +29,9 @@ export async function generateBlogPost(title: string, cta_type: any) {
   },
   "tags": ["tag1", "tag2", "more tags","..","as many as suitable"],
   "introduction": "<p>Engaging introduction using storytelling or a hook, setting the stage for the topic.</p>",
-  "content": "Detailed HTML content with unique insights, including sections with clear headings, subheadings, bullet points, quotes. Avoid redundancy while making sure the writing is varied and conversational.",
+  "content": "<p>First main part of the detailed content with unique insights, section headers, and an engaging flow.</p>",
+  "content1": "<p>Second part of the detailed content continuing the exploration with further insights and information.</p>",
+  "content2": "<p>Final part of the detailed content wrapping up the topic with concluding points, summary, or a shift in focus.</p>",
   "conclusion": "<p>Conclusion summarizing the key takeaways with a strong CTA.</p>",
   "callToAction": "Relevant CTA encouraging user interaction like ${cta_type}.",
   "author": {
@@ -52,12 +54,14 @@ export async function generateBlogPost(title: string, cta_type: any) {
 
 6. **Avoid Redundancy**: Ensure no repeated information or phrases. Provide new angles on the topic in each section to keep the content fresh.
 
-7. **Content Coverage**: Endure content covers all possible aspect of the topic and is as informative as possible
+7. **Content Coverage**: Ensure content covers all possible aspects of the topic and is as informative as possible.
 
-8. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
+8. **Content Split**: Divide the content into three distinct parts: 'content', 'content1', and 'content2', each covering different aspects of the topic.
+
+9. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4",
       messages: [
         {
           role: "system",

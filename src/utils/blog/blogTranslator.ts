@@ -86,6 +86,14 @@ export default async function blogTranslate(blogID: number, language: string) {
         englishContent.content,
         language,
       ]);
+      translatedContent.content1 = await retry(translateHTML, [
+        englishContent.content1,
+        language,
+      ]);
+      translatedContent.content2 = await retry(translateHTML, [
+        englishContent.content2,
+        language,
+      ]);
       translatedContent.SEO = await retry(translateJSON, [
         englishContent.SEO,
         language,

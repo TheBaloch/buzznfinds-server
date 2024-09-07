@@ -15,6 +15,12 @@ export class Content {
   @Column({ type: "text" })
   content!: string;
 
+  @Column({ type: "text", nullable: true })
+  content1!: string;
+
+  @Column({ type: "text", nullable: true })
+  content2!: string;
+
   @Column({ type: "json" })
   SEO!: any;
 

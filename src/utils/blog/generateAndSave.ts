@@ -76,6 +76,8 @@ export async function generateAndSaveBlog(
       content.language = "en";
       content.introduction = generatedBlogData.introduction;
       content.content = generatedBlogData.content;
+      content.content1 = generatedBlogData.content1;
+      content.content2 = generatedBlogData.content2;
       content.conclusion = generatedBlogData.conclusion;
       content.cta = generatedBlogData.callToAction;
       content.SEO = generatedBlogData.SEO;
