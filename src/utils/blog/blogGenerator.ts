@@ -52,7 +52,9 @@ export async function generateBlogPost(title: string, cta_type: any) {
 
 6. **Avoid Redundancy**: Ensure no repeated information or phrases. Provide new angles on the topic in each section to keep the content fresh.
 
-7. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
+7. **Content Coverage**: Endure content covers all possible aspect of the topic and is as informative as possible
+
+8. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
