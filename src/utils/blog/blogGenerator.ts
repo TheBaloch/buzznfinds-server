@@ -13,7 +13,6 @@ const openai = new OpenAI({
 export async function generateBlogPost(title: string, cta_type: any) {
   try {
     const prompt = `Generate a long, unique blog post on the topic "${title}" following this format. The content must not trigger AI detection or be flagged as plagiarized. Focus on human-like writing styles and original insights:
-
 {
   "title": "SEO-optimized title with power words and emotional triggers.",
   "subtitle": "Catchy subtitle that creates curiosity and complements the title.",
@@ -23,16 +22,16 @@ export async function generateBlogPost(title: string, cta_type: any) {
   "subcategory": "Appropriate subcategory (e.g., 'SEO Strategies').",
   "SEO": {
     "metaDescription": "Compelling meta description with primary keywords and a hook.",
-    "metaKeywords": ["low KD keyword1", "NLP keyword2", "LSI keyword3"],
+    "metaKeywords": ["low KD keyword1", "NLP keyword2", "LSI keyword3","add more as needed"],
     "OGtitle": "Shareable title for social media with a call to action.",
     "OGdescription": "Short, engaging description for social media."
   },
   "tags": ["tag1", "tag2", "more tags","..","as many as suitable"],
-  "introduction": "<p>Engaging introduction using storytelling or a hook, setting the stage for the topic.</p>",
-  "content": "<p>First main part of the detailed content with unique insights, section headers, and an engaging flow.</p>",
-  "content1": "<p>Second part of the detailed content continuing the exploration with further insights and information.</p>",
-  "content2": "<p>Final part of the detailed content wrapping up the topic with concluding points, summary, or a shift in focus.</p>",
-  "conclusion": "<p>Conclusion summarizing the key takeaways with a strong CTA.</p>",
+  "introduction": "introduction with proper use of html tags for readability and seo",
+  "content": "content with proper use of html tags for readability and seo",
+  "content1": "content with proper use of html tags for readability and seo",
+  "content2": "content with proper use of html tags for readability and seo",
+  "conclusion": "conclusion with proper use of html tags for readability and seo",
   "callToAction": "Relevant CTA encouraging user interaction like ${cta_type}.",
   "author": {
     "name": "Authentic author name to enhance credibility.",
@@ -40,30 +39,18 @@ export async function generateBlogPost(title: string, cta_type: any) {
   }
 }`;
 
-    const system = `Create a highly engaging and unique blog post with original insights that is undetectable as AI-generated and free of plagiarism. Follow these detailed instructions:
-
-1. **Original Insights**: Ensure all content is 100% unique, providing new insights, analyses, and perspectives. Do not reuse or closely mirror any existing content.
-
-2. **Human-Like Writing**: Vary sentence structure and use conversational language with personal anecdotes, humor, or storytelling elements to mimic natural human writing.
-
-3. **Avoid AI Detection**: Write content that avoids typical AI detection patterns such as overly formal or generic language. Ensure diverse vocabulary and natural transitions.
-
-4. **SEO Optimization**: Integrate low-competition keywords and optimize for snippets, "People Also Ask" sections, and other SEO features. Use the keywords naturally within headings and content.
-
-5. **Readable and Engaging Structure**: Break up content into short paragraphs with clear headings, bullet points, and varied sentence lengths to maintain engagement. Use rhetorical questions and thought-provoking ideas to enhance engagement.
-
-6. **Avoid Redundancy**: Ensure no repeated information or phrases. Provide new angles on the topic in each section to keep the content fresh.
-
-7. **Content Coverage**: Ensure content, content1, content2 covers all possible aspects of the topic collectively and are as informative as possible.
-
-8. **Content Split**: Divide the content into three distinct parts: 'content', 'content1', and 'content2', each covering different aspects of the topic with proper use of html tags.
-
-8. **Content Split**: Ensure content, content1 and content2 to use proper html tags optimized for looks, readability and seo friendly.
-
-9. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
+    const system = `Create a long, unique, and engaging blog post on the provided topic with original insights that mimic human writing and are undetectable as AI-generated. Follow these guidelines:
+1. **Original Content**: Ensure all content is 100% unique with fresh perspectives, data, and insights.
+2. **Human-like Tone**: Use conversational language, personal anecdotes, and storytelling to create a natural writing style. Vary sentence structure and length.
+3. **SEO-Friendly**: Include low-competition keywords and naturally integrate them into headings, subheadings, and content. Focus on optimizing for featured snippets and "People Also Ask" sections.
+4. **Clear Structure**: Divide the blog into distinct sections using HTML tags (<h2>, <h3>, <p>, etc.) with headings, subheadings, bullet points, and short paragraphs for readability.
+5. **Engaging Introduction**: Start with a hook that captures attention, such as a compelling fact, question, or story.
+6. **Diverse Content Segments**: Split the content into three main parts ('content', 'content1', and 'content2') to cover various angles and aspects of the topic in-depth.
+7. **Call to Action**: Include a strong, relevant call to action at the conclusion.
+8. **Output Format**: Deliver the blog post in JSON format with fields like title, subtitle, slug, overview, SEO metadata, tags, introduction, content segments, conclusion, and author information.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
