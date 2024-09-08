@@ -26,7 +26,7 @@ export async function generateBlogPost(title: string, cta_type: any) {
     "OGtitle": "Shareable title for social media with a call to action.",
     "OGdescription": "Short, engaging description for social media."
   },
-  "tags": ["tag1", "tag2", "more tags","..","as many as suitable"],
+  "tags": ["tag1", "tag2", "more tags"],
   "introduction": "introduction with proper use of html tags for readability and seo",
   "content": "content with proper use of html tags for readability and seo",
   "content1": "content with proper use of html tags for readability and seo",
