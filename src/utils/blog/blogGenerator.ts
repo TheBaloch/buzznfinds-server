@@ -54,9 +54,11 @@ export async function generateBlogPost(title: string, cta_type: any) {
 
 6. **Avoid Redundancy**: Ensure no repeated information or phrases. Provide new angles on the topic in each section to keep the content fresh.
 
-7. **Content Coverage**: Ensure content covers all possible aspects of the topic and is as informative as possible.
+7. **Content Coverage**: Ensure content, content1, content2 covers all possible aspects of the topic collectively and are as informative as possible.
 
-8. **Content Split**: Divide the content into three distinct parts: 'content', 'content1', and 'content2', each covering different aspects of the topic.
+8. **Content Split**: Divide the content into three distinct parts: 'content', 'content1', and 'content2', each covering different aspects of the topic with proper use of html tags.
+
+8. **Content Split**: Ensure content, content1 and content2 to use proper html tags optimized for looks, readability and seo friendly.
 
 9. **Output Format**: Deliver the content in JSON format as specified in the prompt.`;
 
