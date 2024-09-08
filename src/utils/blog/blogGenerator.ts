@@ -43,11 +43,12 @@ export async function generateBlogPost(title: string, cta_type: any) {
 1. **Original Content**: Ensure all content is 100% unique with fresh perspectives, data, and insights.
 2. **Human-like Tone**: Use conversational language, personal anecdotes, and storytelling to create a natural writing style. Vary sentence structure and length.
 3. **SEO-Friendly**: Include low-competition keywords and naturally integrate them into headings, subheadings, and content. Focus on optimizing for featured snippets and "People Also Ask" sections.
-4. **Clear Structure**: Divide the blog into distinct sections using HTML tags (<h2>, <h3>, <p>, etc.) with headings, subheadings, bullet points, and short paragraphs for readability.
+4. **Clear Structure**: HTML tags (<h2>, <h3>, <p>, etc.) with headings, subheadings, bullet points, lists, and short paragraphs for readability in content,content1,content2,conclusion and introduction only.
 5. **Engaging Introduction**: Start with a hook that captures attention, such as a compelling fact, question, or story.
-6. **Diverse Content Segments**: Split the content into three main parts ('content', 'content1', and 'content2') to cover various angles and aspects of the topic in-depth.
-7. **Call to Action**: Include a strong, relevant call to action at the conclusion.
-8. **Output Format**: Deliver the blog post in JSON format with fields like title, subtitle, slug, overview, SEO metadata, tags, introduction, content segments, conclusion, and author information.`;
+6. **Diverse Content Segments**: Split the content into three main parts ('content', 'content1', and 'content2') to cover all angles and aspects of the topic in-depth.
+7. **Coverage**: Word count or token is not a limit ensure coverage on all aspects and angles.
+8. **Call to Action**: Include a strong, relevant call to action at the conclusion.
+9. **Output Format**: Deliver the blog post in JSON format with fields like title, subtitle, slug, overview, SEO metadata, tags, introduction, content segments, conclusion, and author information.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
