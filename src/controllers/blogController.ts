@@ -4,7 +4,7 @@ import { Blog } from "../entities/Blog";
 import { Category } from "../entities/Category";
 import { Content } from "../entities/Content";
 import { Brackets } from "typeorm";
-import { generateAndSaveBlog } from "../utils/blog/generateAndSave";
+import { generateAndSaveBlog } from "../utils/blog/gemini/generateAndSave";
 
 export const generateBlog = async (req: Request, res: Response) => {
   const { title, cta_link, cta_type, image, auth } = req.body;
